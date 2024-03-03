@@ -136,6 +136,10 @@ mate.mate-notification-daemon
 xfce.xfce4-whiskermenu-plugin
 xfce.xfce4-pulseaudio-plugin
 rhvoice
+gnome.gnome-terminal
+pkgs.leafpad
+mpv    
+pkgs.pipe-viewer
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

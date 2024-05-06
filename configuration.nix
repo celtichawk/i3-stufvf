@@ -98,8 +98,11 @@ ACCESSIBILITY_ENABLED = "1";
 #   virtualisation.virtualbox.host.enable = true;
 #   virtualisation.virtualbox.host.enableExtensionPack = true;
 #virtualisation.docker.enable = true;
+  virtualisation.containers.enable = true;
 #virtualisation = {
 #    podman = {
+#      enable = true;
+#virtualisation = {
 #      enable = true;
 
       # Create a `docker` alias for podman, to use it as a drop-in replacement
@@ -134,17 +137,18 @@ driSupport32Bit = true;
 #};
 #};
 #services.xserver.videoDrivers = ["nvidia"];
+ services.tlp.enable = true;
  #  Define a user account. Don't forget to set a password with ‘passwd’.
-  users.users.jacek = {
+  users.users.username = {
     isNormalUser = true;
-    description = "Jace Kattalakis";
+    description = "Full name goes here, e.g. Bob Smith";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
     #  thunderbird
     ];
   };
-#users.extraUsers.jacek = {
+#users.extraUsers.username = {
 #subUidRanges = [{ startUid = 100000; count = 65536; }];
 #subGidRanges = [{ startGid = 100000; count = 65536; }];
 #};
@@ -176,7 +180,6 @@ distrobox
 (pidgin.override { plugins = [ purple-discord purple-plugin-pack ]; })
 appimage-run
 podman
-pkgs.brave
   ];
 
   # Some programs need SUID wrappers, can be configured further or are

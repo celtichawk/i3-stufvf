@@ -20,8 +20,10 @@ boot.plymouth.theme = "solar";
 #boot.kernelPackages = pkgs.linuxPackages_xanmod_latest;
 hardware.enableAllFirmware = true;
 hardware.firmware = [ pkgs.sof-firmware ];
+
+
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  networking.hostName = "tigers-laptop"; # Define your hostname.
+  networking.hostName = "tigers-desktop"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -48,6 +50,19 @@ xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     LC_TIME = "en_GB.UTF-8";
   };
 services.gvfs.enable = true;
+#services.flatpak.enable = true;
+services.avahi = {
+  enable = true;
+  nssmdns = true;
+  openFirewall = true;
+};
+services.searx.enable = true;
+  services.searx.redisCreateLocally = true;
+  services.searx.settings.server.secret_key = "test";
+  services.searx.settings.server.port = 8080;
+  services.searx.settings.server.bind_address = "0.0.0.0";
+  services.searx.settings.search.formats = ["html" "json" "rss"];
+
   # Enable the X11 windowing system.
   services.xserver.enable = true;
 
@@ -55,18 +70,18 @@ services.gvfs.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
 services.xserver.displayManager.lightdm.greeters.slick.enable = true;
 #services.xserver.displayManager.sddm.wayland.enable = true;
-services.xserver.desktopManager.mate.enable = true;
+#services.xserver.desktopManager.mate.enable = true;
 #services.xserver.desktopManager.gnome.enable = true;
 
-#services.xserver.desktopManager.plasma6.enable = true;
+services.xserver.desktopManager.plasma6.enable = true;
 systemd.services."getty@tty1".enable = false;
 systemd.services."autovt@tty1".enable = false;
-services.xserver.displayManager.defaultSession = "mate";
+services.xserver.displayManager.defaultSession = "plasma";
 services.gnome.at-spi2-core.enable = true;
   # Configure keymap in X11
-  services.xserver.xkb = {
+  services.xserver = {
     layout = "gb";
-    variant = "";
+    xkbVariant = "";
   };
 
   # Configure console keymap
@@ -74,6 +89,8 @@ services.gnome.at-spi2-core.enable = true;
 
   # Enable CUPS to print documents.
   services.printing.enable = true;
+
+
 
   # Enable sound with pipewire.
   sound.enable = true;
@@ -106,7 +123,7 @@ ACCESSIBILITY_ENABLED = "1";
 #      enable = true;
 
       # Create a `docker` alias for podman, to use it as a drop-in replacement
-#      dockerCompat = true;
+  #    dockerCompat = true;
 
       # Required for containers under podman-compose to be able to talk to each other.
 #      defaultNetwork.settings.dns_enabled = true;
@@ -116,8 +133,6 @@ ACCESSIBILITY_ENABLED = "1";
    services.xserver.libinput.enable = true;
 hardware.opengl = {
 enable = true;
-driSupport = true;
-driSupport32Bit = true;
   };
 #hardware.nvidia = {
 
@@ -137,11 +152,11 @@ driSupport32Bit = true;
 #};
 #};
 #services.xserver.videoDrivers = ["nvidia"];
- services.tlp.enable = true;
+ #services.tlp.enable = true;
  #  Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.username = {
     isNormalUser = true;
-    description = "Full name goes here, e.g. Bob Smith";
+    description = "username goes here";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
@@ -155,14 +170,11 @@ driSupport32Bit = true;
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-#packageOverrides = pkgs: with pkgs; {
-#pidgin-with-plugins = pkgs.pidgin.override {
-#plugins = [ purple-discord purple-plugin-pack];
 
   # List packages installed in system profile. To search, run:
   # $ nix search wget
   environment.systemPackages = with pkgs; [
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
+    vim-full # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     wget
 orca
 speechd
@@ -180,6 +192,20 @@ distrobox
 (pidgin.override { plugins = [ purple-discord purple-plugin-pack ]; })
 appimage-run
 podman
+pipe-viewer
+mpv
+epub2txt2
+    pkgs.epr
+pkgs.yt-dlp
+calibre
+steam-run
+espeak
+w3m
+tesseract
+tintin
+mate.mate-terminal
+libreoffice-fresh
+quickemu
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
@@ -196,7 +222,7 @@ podman
    services.openssh.enable = true;
 #services.locate.enable = true;
 #services.mullvad-vpn.enable = true;
-#services.ollama.enable = true;
+services.ollama.enable = true;
 #services.brltty.enable = true;
 #users.users.brltty.isNormalUser = true;
 #programs.hyprland.enable = true;
@@ -217,5 +243,7 @@ users.defaultUserShell = pkgs.zsh;
   system.stateVersion = "24.05"; # Did you read the comment?
 
 }
+
+
 
 

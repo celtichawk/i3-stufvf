@@ -9,7 +9,8 @@
     [ # Include the results of the hardware scan.
 ./hardware-configuration.nix
 #<kde2nix/nixos.nix>
-#<home-manager/nixos>
+<home-manager/nixos>
+#./home.nix
     ];
 
   # Bootloader.
@@ -23,7 +24,7 @@ hardware.firmware = [ pkgs.sof-firmware ];
 
 
 nix.settings.experimental-features = [ "nix-command" "flakes" ];
-  networking.hostName = "tigers-desktop"; # Define your hostname.
+  networking.hostName = "hostname goes here"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
@@ -31,6 +32,7 @@ nix.settings.experimental-features = [ "nix-command" "flakes" ];
 
   # Enable networking
   networking.networkmanager.enable = true;
+  xdg.portal.enable = true;
 xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
   # Set your time zone.
   time.timeZone = "Europe/London";
@@ -49,19 +51,22 @@ xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     LC_TELEPHONE = "en_GB.UTF-8";
     LC_TIME = "en_GB.UTF-8";
   };
+  services.logmein-hamachi.enable = true;
 services.gvfs.enable = true;
-#services.flatpak.enable = true;
+services.flatpak.enable = true;
+#services.gnome.gnome-online-accounts.enable = true;
 services.avahi = {
   enable = true;
-  nssmdns = true;
+  nssmdns4 = true;
   openFirewall = true;
 };
 services.searx.enable = true;
   services.searx.redisCreateLocally = true;
   services.searx.settings.server.secret_key = "test";
   services.searx.settings.server.port = 8080;
-  services.searx.settings.server.bind_address = "0.0.0.0";
+  services.searx.settings.server.bind_address = "127.0.0.1";
   services.searx.settings.search.formats = ["html" "json" "rss"];
+  systemd.services.NetworkManager-wait-online.enable = false;
 
   # Enable the X11 windowing system.
   services.xserver.enable = true;
@@ -70,18 +75,20 @@ services.searx.enable = true;
   services.xserver.displayManager.lightdm.enable = true;
 services.xserver.displayManager.lightdm.greeters.slick.enable = true;
 #services.xserver.displayManager.sddm.wayland.enable = true;
-#services.xserver.desktopManager.mate.enable = true;
-#services.xserver.desktopManager.gnome.enable = true;
+#services.desktopManager.mate.enable = true;
+services.xserver.desktopManager.xfce.enable = true;
+#services.xserver.windowManager.i3.enable = true;
+#services.desktopManager.gnome.enable = true;
 
-services.xserver.desktopManager.plasma6.enable = true;
+#services.desktopManager.plasma6.enable = true;
 systemd.services."getty@tty1".enable = false;
 systemd.services."autovt@tty1".enable = false;
-services.xserver.displayManager.defaultSession = "plasma";
+services.displayManager.defaultSession = "sway";
 services.gnome.at-spi2-core.enable = true;
   # Configure keymap in X11
-  services.xserver = {
+  services.xserver.xkb = {
     layout = "gb";
-    xkbVariant = "";
+    variant = "";
   };
 
   # Configure console keymap
@@ -93,7 +100,7 @@ services.gnome.at-spi2-core.enable = true;
 
 
   # Enable sound with pipewire.
-  sound.enable = true;
+  #sound.enable = true;
   hardware.pulseaudio.enable = false;
   security.rtkit.enable = true;
   services.pipewire = {
@@ -129,9 +136,11 @@ ACCESSIBILITY_ENABLED = "1";
 #      defaultNetwork.settings.dns_enabled = true;
 #    };
 #  };
+
+
   # Enable touchpad support (enabled default in most desktopManager).
-   services.xserver.libinput.enable = true;
-hardware.opengl = {
+   services.libinput.enable = true;
+hardware.graphics = {
 enable = true;
   };
 #hardware.nvidia = {
@@ -156,7 +165,7 @@ enable = true;
  #  Define a user account. Don't forget to set a password with ‘passwd’.
   users.users.username = {
     isNormalUser = true;
-    description = "username goes here";
+    description = "Your name goes here";
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
       firefox
@@ -199,21 +208,35 @@ epub2txt2
 pkgs.yt-dlp
 calibre
 steam-run
-espeak
 w3m
 tesseract
-tintin
-mate.mate-terminal
-libreoffice-fresh
+#tintin
 quickemu
+mate.pluma
+pkgs.vesktop
+espeak
+brave
+lxterminal
+swaynotificationcenter
+xfce.xfce4-whiskermenu-plugin
+nwg-drawer
+sway
+
   ];
 
   # Some programs need SUID wrappers, can be configured further or are
   # started in user sessions.
   # programs.mtr.enable = true;
+  programs.sway.enable = true;
   # programs.gnupg.agent = {
   #   enable = true;
   #   enableSSHSupport = true;
+  programs.steam = {
+  enable = false;
+  remotePlay.openFirewall = true; # Open ports in the firewall for Steam Remote Play
+  dedicatedServer.openFirewall = true; # Open ports in the firewall for Source Dedicated Server
+  localNetworkGameTransfers.openFirewall = true; # Open ports in the firewall for Steam Local Network Game Transfers
+};
   # };
 
   # List services that you want to enable:
@@ -223,6 +246,9 @@ quickemu
 #services.locate.enable = true;
 #services.mullvad-vpn.enable = true;
 services.ollama.enable = true;
+#services.open-webui.enable = true;
+#services.open-webui.port = 11111;
+#services.open-webui.host = "127.0.0.1";
 #services.brltty.enable = true;
 #users.users.brltty.isNormalUser = true;
 #programs.hyprland.enable = true;
@@ -243,7 +269,6 @@ users.defaultUserShell = pkgs.zsh;
   system.stateVersion = "24.05"; # Did you read the comment?
 
 }
-
 
 
 
